@@ -75,19 +75,14 @@ def print_fsimage_info():
         file_name = inode[2].text  # Name
         modified_time =  inode[4].text # modified time
         file_size = ''
-        if file_type == 'FILE':
-            file_size = inode[6].text  # Name
-
         if file_name is None:
-            file_name = '/'
+            file_name = '/' # root node
 
         # extracting block level details
         for block in inode.findall('blocks'):
             # each <block> contains block_id, nuimBytes and genStamp
-            file_size = block[0][2].text
+            file_size = block[0][2].text #numbytes
         entries.append([identifier, file_type, file_name, file_size])
-
-
 
     # Output data in a pretty pretty table
     t = PrettyTable(['iNode', 'Type', 'Name', 'Size (in bytes)'])
@@ -124,7 +119,7 @@ def parse_arguments(args):
 
         output_directory = args.o
         if DEBUG:
-            output_directory = 'test/output3/'
+            output_directory = 'test/output/'
         OUTPUT_FILE_SPECIFIED = True
         if os.path.isdir(output_directory) is False:
             vwrite("Directory not found. Attempting to make directory.")
@@ -146,13 +141,13 @@ def parse_arguments(args):
         print_fsimage_info()
         sys.exit(1)
 
-
-
     if args.d is not None:
         global datanodes
+        vwrite("Number of datanodes specified: " + args.d)
 
         for i in range(args.d):
             data_path = input('Path to device {}: '.format(i+1))
+            sys.stdout.flush()
             datanodes.append(data_path)
         vwrite("Data nodes added: " + str(datanodes))
     if args.r is not None:
