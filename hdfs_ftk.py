@@ -1,7 +1,10 @@
-import sys
+import sys, os
 import argparse
 import xml.etree.ElementTree
 from prettytable import PrettyTable
+
+# Debug
+DEBUG = True # When debugging mode is switched on, script will run with sample values from the test/ directory.
 
 
 # Global variable
@@ -10,6 +13,7 @@ OUTPUT_FILE_SPECIFIED = False
 output_directory = ''
 verbosity = False
 fsimage_path = ''
+datanodes = [] # paths to the datanodes
 
 
 if sys.version_info < (3, 0, 0):
@@ -25,11 +29,14 @@ def vwrite(x):
         sys.stdout.flush()
 
 
-'''
+
 def dump_file(block_id):
+    vwrite("DUMP_FILE: Attempting to extract from block id: " + block_id)
+
+    vwrite("Traversing through " + str(datanodes))
     # to write
 
-'''
+
 
 def recover(id_no):
     vwrite("Recovering ID: " + id_no)
@@ -53,8 +60,8 @@ def recover(id_no):
             for block in inode.findall('blocks'):
                 # each <block> contains block_id, nuimBytes and genStamp
                 block_id = block[0][0].text  # get block_id
-                vwrite("Retrieving from " + block_id)  # retrieve if found
-                # dump_block_to_file(block_id) # find file and dump to output directory
+                vwrite("Retrieving from block id: " + block_id)  # retrieve if found
+                dump_file(block_id) # find file and dump to output directory
 
 
 def print_fsimage_info():
@@ -87,7 +94,8 @@ def print_fsimage_info():
     for entry in entries:
         t.add_row(entry)
     print(t)
-    print("To recover a file for tag no. n, append `-tag n` and specify an output folder through `-o /output_directory`")
+    print("To recover a file for ID: n, append `-r n` and specify an output folder through `-o /output_directory`")
+    print("Example command: python hdfs_ftk.py -f fsimage -r 16300 -o /output_directory/ -d 3")
 
 
 def parse_arguments(args):
@@ -99,19 +107,54 @@ def parse_arguments(args):
 
     # extract path to fsimage
     global fsimage_path
-    fsimage_path = 'test/fsimage2.xml'
-    #fsimage_path = args.f
-    vwrite("FSImage path: " + fsimage_path)
+    fsimage_path = args.f
+    if DEBUG:
+        fsimage_path = 'test/fsimage2.xml'
 
+    # check if file exists
+
+    if os.path.isfile(fsimage_path) is False:
+        sys.stderr.write("fsimage file not found. Exiting..")
+        sys.stderr.flush()
+        sys.exit(1)
+
+
+    # extract output directory
     if args.o is not None:
-        output_directory = 'test/output/'
-        #output_directory = args.o
-        vwrite("Output directory: " + output_directory)
+
+        output_directory = args.o
+        if DEBUG:
+            output_directory = 'test/output3/'
         OUTPUT_FILE_SPECIFIED = True
+        if os.path.isdir(output_directory) is False:
+            vwrite("Directory not found. Attempting to make directory.")
+            os.mkdir(output_directory)
+            if os.path.isdir(output_directory) is False:
+                sys.stderr.write("Unable to make directory. Check your permissions or directory, perhaps? Exiting. ")
+                sys.exit(1)
+            else:
+                vwrite("Directory " + output_directory + "successfully created.")
+
+
+
+    # Verbosity display info
+    vwrite("FSImage path: " + fsimage_path)
+    vwrite("Output directory: " + output_directory)
+
+    # Show fsimage info
+    if args.displayfsimage is not None:
+        print_fsimage_info()
+        sys.exit(1)
+
+
 
     if args.d is not None:
+        global datanodes
+
         for i in range(args.d):
-            sys.stdout.write("Path to Device {0}\n".format(i))
+            data_path = input('Path to device {}: '.format(i+1))
+            datanodes.append(data_path)
+        vwrite("Data nodes added: " + str(datanodes))
     if args.r is not None:
         recover(args.r)
 
@@ -126,6 +169,7 @@ def main():
     parser = argparse.ArgumentParser(description='HDFS Forensics Toolkit.')
 
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose mode")
+    parser.add_argument("-displayfsimage", action="store_true", help="Print out fsimage table")
 
     parser.add_argument("-d", type=int,
                         help="Number of Datanodes")
@@ -139,7 +183,7 @@ def main():
     args = parser.parse_args()
     parse_arguments(args)
 
-    print_fsimage_info()
+
 
 
 if __name__ == "__main__":
