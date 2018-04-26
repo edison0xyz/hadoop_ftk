@@ -185,6 +185,14 @@ def parse_arguments(args):
             data_path = input('Path to device {}: '.format(i+1))
             sys.stdout.flush()
             datanodes.append(data_path)
+
+        if DEBUG:
+            vwrite('DEBUG MODE ON: USING TEST VALUES')
+            datanodes = [
+                'test/datanode1',
+                'test/datanode2',
+                'test/datanode3'
+            ]
         vwrite("Data nodes added: " + str(datanodes))
     if args.r is not None:
         recover(args.r)
