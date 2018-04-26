@@ -34,6 +34,23 @@ def dump_file(block_id):
     vwrite("DUMP_FILE: Attempting to extract from block id: " + block_id)
 
     vwrite("Traversing through " + str(datanodes))
+
+    # validity check on datanodes
+    vwrite("Checking datanodes' path validity...")
+    cnt = 0
+    for data_path in datanodes:
+        flag = "Valid" if os.path.isdir(data_path) else "Not valid"
+        if os.path.isdir(data_path) is False:
+            cnt += 1
+        vwrite(data_path + " : " + flag)
+
+    if cnt < len(datanodes):
+        print("Number of valid datanode path: " + str(len(datanodes) - cnt) + " / " + str(len(datanodes)))
+    else:
+        sys.stderr.write("All datanodes path are not valid. No data to lookup from. Aborting.")
+        sys.stderr.flush()
+        sys.exit(1)
+
     # to write
 
 
@@ -42,7 +59,7 @@ def recover(id_no):
     vwrite("Recovering ID: " + id_no)
 
     # construct tree from xml document
-    e = xml.etree.ElementTree.parse(fsimage_path).getroot()
+    e = xml.etree.ElementTree.parse(fsimage_path).getroot()  # root of xml tree
     inode_section = e[1]  # get inode_section which contains information about the inodes
     for inode in inode_section.findall('inode'):
         identifier = inode[0].text
@@ -55,7 +72,7 @@ def recover(id_no):
             if file_type == 'DIRECTORY':
                 sys.stderr.write("You are attempting to recover a directory. "
                                  "HDFS FTK only supports file extraction at this moment!")
-                sys.exit(1) # exit program
+                sys.exit(1)  # exit program
 
             for block in inode.findall('blocks'):
                 # each <block> contains block_id, nuimBytes and genStamp
@@ -76,12 +93,12 @@ def print_fsimage_info():
         modified_time =  inode[4].text # modified time
         file_size = ''
         if file_name is None:
-            file_name = '/' # root node
+            file_name = '/'  # root node
 
         # extracting block level details
         for block in inode.findall('blocks'):
-            # each <block> contains block_id, nuimBytes and genStamp
-            file_size = block[0][2].text #numbytes
+            # each <block> contains block_id, numBytes and genStamp
+            file_size = block[0][2].text  #numbytes
         entries.append([identifier, file_type, file_name, file_size])
 
     # Output data in a pretty pretty table
@@ -100,11 +117,11 @@ def parse_arguments(args):
         global verbosity
         verbosity = True
 
-    # extract path to fsimage
+    # Get fsimage path
     global fsimage_path
     fsimage_path = args.f
     if DEBUG:
-        fsimage_path = 'test/fsimage2.xml'
+        fsimage_path = 'test/fsimage2.xml'  # testing fsimage path
 
     # check if file exists
 
@@ -130,20 +147,18 @@ def parse_arguments(args):
             else:
                 vwrite("Directory " + output_directory + "successfully created.")
 
-
-
     # Verbosity display info
     vwrite("FSImage path: " + fsimage_path)
     vwrite("Output directory: " + output_directory)
 
     # Show fsimage info
-    if args.displayfsimage is not None:
+    if args.displayfsimage is True:
         print_fsimage_info()
         sys.exit(1)
 
     if args.d is not None:
         global datanodes
-        vwrite("Number of datanodes specified: " + args.d)
+        vwrite("Number of datanodes specified: " + str(args.d))
 
         for i in range(args.d):
             data_path = input('Path to device {}: '.format(i+1))
@@ -177,8 +192,6 @@ def main():
                         help="Path to fsimage") # fsimage is a required filed
     args = parser.parse_args()
     parse_arguments(args)
-
-
 
 
 if __name__ == "__main__":
