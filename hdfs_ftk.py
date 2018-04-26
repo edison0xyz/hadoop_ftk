@@ -1,7 +1,9 @@
-import sys, os
+import sys, os, glob
 import argparse
 import xml.etree.ElementTree
 from prettytable import PrettyTable
+from shutil import copyfile
+
 
 # Debug
 DEBUG = True # When debugging mode is switched on, script will run with sample values from the test/ directory.
@@ -52,6 +54,26 @@ def dump_file(block_id):
         sys.exit(1)
 
     # to write
+    vwrite("Finding file with block id: " + block_id)
+    for path in datanodes:
+        matches = []
+        for dirpath, subdirs, files in os.walk(path):
+            for x in files:
+                if block_id in x and '.meta' not in x:
+                    matches.append(os.path.join(dirpath, x))
+
+    if len(matches) == 0:
+        sys.stderr.write("No matches found.")
+        sys.stderr.flush()
+        sys.exit(1)
+    else:
+        # copy to output directory
+        cnt = 0
+        for match in matches:
+            copyfile(match, output_directory)
+            cnt += 1
+    print(str(cnt) + " files extracted successfully into " + output_directory)
+
 
 
 
@@ -121,7 +143,7 @@ def parse_arguments(args):
     global fsimage_path
     fsimage_path = args.f
     if DEBUG:
-        fsimage_path = 'test/fsimage2.xml'  # testing fsimage path
+        fsimage_path = 'test/fsimage.xml'  # testing fsimage path
 
     # check if file exists
 
@@ -133,7 +155,7 @@ def parse_arguments(args):
 
     # extract output directory
     if args.o is not None:
-
+        global output_directory
         output_directory = args.o
         if DEBUG:
             output_directory = 'test/output/'
