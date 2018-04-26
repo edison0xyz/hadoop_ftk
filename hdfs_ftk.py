@@ -2,8 +2,7 @@ import sys, os, glob
 import argparse
 import xml.etree.ElementTree
 from prettytable import PrettyTable
-from shutil import copyfile
-
+import shutil
 
 # Debug
 DEBUG = True # When debugging mode is switched on, script will run with sample values from the test/ directory.
@@ -70,7 +69,7 @@ def dump_file(block_id):
         # copy to output directory
         cnt = 0
         for match in matches:
-            copyfile(match, output_directory)
+            shutil.copy2(match, output_directory)
             cnt += 1
     print(str(cnt) + " files extracted successfully into " + output_directory)
 
