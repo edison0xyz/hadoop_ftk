@@ -33,9 +33,14 @@ Required named arguments:
 
 #### Example commands:
 
-To view contents of HDFS File System: `python hdfs_ftk.py -f fsimage.xml`
-Display fsimage: `python hdfs_ftk.py -f test/fsimage.xml -displayfsimage`
-Extract block id `16386` from HDFS with three datanodes: `python hdfs_ftk.py -f test/fsimage.xml -v -r 16386 -o /output -d 3`
+* To view contents of HDFS File System: `python hdfs_ftk.py -f fsimage.xml`
+* Display fsimage: `python hdfs_ftk.py -f test/fsimage.xml -displayfsimage`
+* Extract block id `16386` from HDFS with three datanodes: `python hdfs_ftk.py -f test/fsimage.xml -v -r 16386 -o /output -d 3`
 
 #### Demo videos
-Extracting files and displaying fsimage information: https://youtu.be/I1I08ixInxI
+* Extracting files and displaying fsimage information: https://youtu.be/I1I08ixInxI
+
+
+## Future works
+* Large file recovery: Files more than the blocksize specified in the configurations are broken into several blocks. This tool is unable to recover large data files.
+* Search for filename: Search for filename function will be included in future.

@@ -187,7 +187,6 @@ def parse_arguments(args):
             datanodes.append(data_path)
 
         if DEBUG:
-            vwrite('DEBUG MODE ON: USING TEST VALUES')
             datanodes = [
                 'test/datanode1',
                 'test/datanode2',
@@ -203,6 +202,9 @@ def main():
     # Exceptionally useful for debugging/telling people what's going on
     sys.stderr.write("Hadoop Forensics File System Forensics Tool Kit (HDFS FTK) ver. {0}\n".format(VERSION))
     sys.stderr.flush()
+
+    if DEBUG:
+        print("DEBUG MODE ON: Test values will be used for fsimage, output and datanode directories.")
 
     # parser set-up
     parser = argparse.ArgumentParser(description='HDFS Forensics Toolkit.')
