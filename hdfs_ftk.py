@@ -247,7 +247,7 @@ def main():
     parser.add_argument("-r", "-recover",
                         help="Recover file given ID number")
     requiredNamed = parser.add_argument_group('Required named arguments')
-    requiredNamed.add_argument("-f", required=True,
+    requiredNamed.add_argument("-f", "-fsimage", required=True,
                         help="Path to fsimage") # fsimage is a required filed
     args = parser.parse_args()
     parse_arguments(args)

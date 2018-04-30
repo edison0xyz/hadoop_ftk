@@ -1,6 +1,12 @@
 # Hadoop File System Forensics Toolkit (HDFS FTK)
 View and extract files from an offline image of Hadoop file system.
 
+Supports:
+* Support for multiple datanodes
+* Support of fsimage XML format
+* Search filenames and filter by filetype
+* File recovery while preserving metadata
+
 
 ### Motivation
 In Hadoop File Systems, metadata such as filename, access time and file system hierachy information is stored in the namenode. The actual data is stored in the datanodes in _blocks_. Although HDFS has command client tools to manage the extraction files, it only works with a running cluster of HDFS machines.
@@ -16,18 +22,26 @@ This python script aims to provide investigators with the ability to perform for
 
 ```
 Hadoop Forensics File System Forensics Tool Kit (HDFS FTK) ver. 1.0
-usage: hdfs_ftk.py [-h] [-v] [-d D] [-o O] -f F
+DEBUG MODE ON: Test values will be used for fsimage, output and datanode directories.
+usage: hdfs_ftk.py [-h] [-v] [-displayfsimage] [-showfilesonly] [-showdironly]
+                   [-filterByName FILTERBYNAME] [-d D] [-o O] [-r R] -f F
 
 HDFS Forensics Toolkit.
 
 optional arguments:
-  -h, --help       show this help message and exit
-  -v, --verbose    Verbose mode
-  -d D             Number of Datanodes
-  -o O, -output O  output directory
+  -h, --help            show this help message and exit
+  -v, --verbose         Verbose mode
+  -displayfsimage       Print out fsimage table
+  -showfilesonly        Show files only
+  -showdironly          Show directories only
+  -filterByName FILTERBYNAME
+                        Filter fsimage display by filename
+  -d D                  Number of Datanodes
+  -o O, -output O       output directory
+  -r R, -recover R      Recover file given ID number
 
 Required named arguments:
-  -f F             Path to fsimage
+  -f F, -fsimage F      Path to fsimage
 
 ```
 
@@ -40,7 +54,5 @@ Required named arguments:
 #### Demo videos
 * Extracting files and displaying fsimage information: https://youtu.be/I1I08ixInxI
 
-
 ## Future works
 * Large file recovery: Files more than the blocksize specified in the configurations are broken into several blocks. This tool is unable to recover large data files.
-* Search for filename: Search for filename function will be included in future.
