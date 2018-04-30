@@ -1,3 +1,20 @@
+# Hadoop File System Forensics Toolkit
+# Author: Edison LIM (edison.limjh@gmail.com)
+
+# HDFS FTK is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# HDFS FTK  is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with HDFS FTK .  If not, see <http://www.gnu.org/licenses/>.
+
+
 import sys, os, glob
 import argparse
 import xml.etree.ElementTree
@@ -224,8 +241,9 @@ def parse_arguments(args):
 def main():
     # Get the version information on every output from the beginning
     # Exceptionally useful for debugging/telling people what's going on
-    sys.stderr.write("Hadoop Forensics File System Forensics Tool Kit (HDFS FTK) ver. {0}\n".format(VERSION))
-    sys.stderr.flush()
+    sys.stdout.write("Hadoop Forensics File System Forensics Tool Kit (HDFS FTK) ver. {0}\n".format(VERSION))
+    sys.stdout.write("Author: Edison LIM (edison.limjh@gmail.com)\n")
+    sys.stdout.flush()
 
     if DEBUG:
         print("DEBUG MODE ON: Test values will be used for fsimage, output and datanode directories.")
