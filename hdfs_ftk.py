@@ -15,7 +15,10 @@ output_directory = ''
 verbosity = False
 fsimage_path = ''
 datanodes = [] # paths to the datanodes
+SEARCH_TERM = ''
 
+SHOW_DIRECTORY = True # enabled by default
+SHOW_FILES = True # enabled by default 
 
 if sys.version_info < (3, 0, 0):
     sys.stderr.write("HDFS FTK requires python version 3.0 and above, please upgrade your python installation.")
@@ -61,7 +64,7 @@ def dump_file(block_id):
                 if block_id in x and '.meta' not in x:
                     matches.append(os.path.join(dirpath, x))
 
-    if len(matches) == 0:
+    if len(matches) == 0:        
         sys.stderr.write("No matches found.")
         sys.stderr.flush()
         sys.exit(1)
@@ -72,9 +75,6 @@ def dump_file(block_id):
             shutil.copy2(match, output_directory)
             cnt += 1
     print(str(cnt) + " files extracted successfully into " + output_directory)
-
-
-
 
 def recover(id_no):
     vwrite("Recovering ID: " + id_no)
@@ -111,7 +111,7 @@ def print_fsimage_info():
         identifier = inode[0].text
         file_type = inode[1].text  # Type
         file_name = inode[2].text  # Name
-        modified_time =  inode[4].text # modified time
+        # modified_time =  inode[4].text # modified time
         file_size = ''
         if file_name is None:
             file_name = '/'  # root node
@@ -120,7 +120,12 @@ def print_fsimage_info():
         for block in inode.findall('blocks'):
             # each <block> contains block_id, numBytes and genStamp
             file_size = block[0][2].text  #numbytes
-        entries.append([identifier, file_type, file_name, file_size])
+        if SEARCH_TERM in file_name:
+            if SHOW_DIRECTORY and "DIRECTORY" in file_type:
+                entries.append([identifier, file_type, file_name, file_size])
+            if SHOW_FILES and "FILE" in file_type:
+                entries.append([identifier, file_type, file_name, file_size])
+            
 
     # Output data in a pretty pretty table
     t = PrettyTable(['iNode', 'Type', 'Name', 'Size (in bytes)'])
@@ -137,6 +142,7 @@ def parse_arguments(args):
         print("Verbose mode on.")
         global verbosity
         verbosity = True
+
 
     # Get fsimage path
     global fsimage_path
@@ -172,10 +178,28 @@ def parse_arguments(args):
     vwrite("FSImage path: " + fsimage_path)
     vwrite("Output directory: " + output_directory)
 
+    # filters arguments
+    if args.filterByName is not None:
+        global SEARCH_TERM
+        SEARCH_TERM = args.filterByName
+        vwrite("ARGS: SEARCH FILE SPECIFIED: " + SEARCH_TERM)
+
+    global SHOW_DIRECTORY, SHOW_FILES
+    
+    if args.showfilesonly and args.showdironly is True:
+        sys.stderr.write("Showing both directory and files")
+    elif args.showfilesonly is True:
+        SHOW_DIRECTORY = False
+    elif args.showdironly is True:
+        SHOW_FILES = False
+
     # Show fsimage info
     if args.displayfsimage is True:
         print_fsimage_info()
         sys.exit(1)
+
+
+
 
     if args.d is not None:
         global datanodes
@@ -211,6 +235,10 @@ def main():
 
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose mode")
     parser.add_argument("-displayfsimage", action="store_true", help="Print out fsimage table")
+    parser.add_argument("-showfilesonly", action="store_true", help="Show files only")
+    parser.add_argument("-showdironly", action="store_true", help="Show directories only")
+
+    parser.add_argument("-filterByName", help="Filter fsimage display by filename")
 
     parser.add_argument("-d", type=int,
                         help="Number of Datanodes")
