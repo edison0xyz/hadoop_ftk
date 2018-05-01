@@ -18,6 +18,21 @@ This python script aims to provide investigators with the ability to perform for
 * Python 3.x
 * PrettyTable: `pip install prettytable`
 
+### Evidence Acquisition Procedure
+* Obtain metadata from namenode
+```
+$namenode: hdfs dfsadmin -safemode enter
+$namenode: hdfs dfsadmin –saveNamespace
+$namenode: hdfs oiv -i <PATH_TO_FSIMAGE> -o <FILE> -p XML
+```
+
+* Archive data from datanodes
+```
+$datanodes: tar czf datanodex.tar.gz $HADOOP_HOME/Hadoop_data
+```
+
+* SCP files to a local forensic workstation
+
 ### Usage
 
 ```
