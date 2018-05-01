@@ -22,7 +22,7 @@ from prettytable import PrettyTable
 import shutil
 
 # Debug
-DEBUG = True # When debugging mode is switched on, script will run with sample values from the test/ directory.
+DEBUG = False # When debugging mode is switched on, script will run with sample values from the test/ directory.
 
 
 # Global variable
@@ -60,6 +60,8 @@ def dump_file(block_id):
     vwrite("Checking datanodes' path validity...")
     cnt = 0
     for data_path in datanodes:
+        if data_path.endswith('/') is False:
+            data_path += '/'
         flag = "Valid" if os.path.isdir(data_path) else "Not valid"
         if os.path.isdir(data_path) is False:
             cnt += 1
@@ -149,6 +151,11 @@ def print_fsimage_info():
     for entry in entries:
         t.add_row(entry)
     print(t)
+
+    # tips 
+    print("Try these filters:")
+    print("    -showfilesonly        Show files only \n    -showdironly          Show directories only")
+    print("    -filterByName <name> Filter fsimage display by filename\n\n")
     print("To recover a file for ID: n, append `-r n` and specify an output folder through `-o /output_directory`")
     print("Example command: python hdfs_ftk.py -f fsimage -r 16300 -o /output_directory/ -d 3")
 
@@ -181,7 +188,6 @@ def parse_arguments(args):
         output_directory = args.o
         if DEBUG:
             output_directory = 'test/output/'
-        OUTPUT_FILE_SPECIFIED = True
         if os.path.isdir(output_directory) is False:
             vwrite("Directory not found. Attempting to make directory.")
             os.mkdir(output_directory)

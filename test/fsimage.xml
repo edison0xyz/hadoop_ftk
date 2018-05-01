@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fsimage><NameSection>
-<genstampV1>1000</genstampV1><genstampV2>1002</genstampV2><genstampV1Limit>0</genstampV1Limit><lastAllocatedBlockId>1073741826</lastAllocatedBlockId><txid>17434</txid></NameSection>
-<INodeSection><lastInodeId>16388</lastInodeId><inode><id>16385</id><type>DIRECTORY</type><name></name><mtime>1524549008578</mtime><permission>ubuntu:supergroup:rwxr-xr-x</permission><nsquota>9223372036854775807</nsquota><dsquota>-1</dsquota></inode>
+<genstampV1>1000</genstampV1><genstampV2>1006</genstampV2><genstampV1Limit>0</genstampV1Limit><lastAllocatedBlockId>1073741830</lastAllocatedBlockId><txid>17475</txid></NameSection>
+<INodeSection><lastInodeId>16393</lastInodeId><inode><id>16385</id><type>DIRECTORY</type><name></name><mtime>1525151856504</mtime><permission>ubuntu:supergroup:rwxr-xr-x</permission><nsquota>9223372036854775807</nsquota><dsquota>-1</dsquota></inode>
 <inode><id>16386</id><type>FILE</type><name>bar.txt</name><replication>3</replication><mtime>1524027677255</mtime><atime>1524027676271</atime><perferredBlockSize>134217728</perferredBlockSize><permission>ubuntu:supergroup:rw-r--r--</permission><blocks><block><id>1073741825</id><genstamp>1001</genstamp><numBytes>18</numBytes></block>
 </blocks>
 </inode>
@@ -9,10 +9,24 @@
 <inode><id>16388</id><type>FILE</type><name>big.txt</name><replication>3</replication><mtime>1524549008572</mtime><atime>1524549008140</atime><perferredBlockSize>134217728</perferredBlockSize><permission>ubuntu:supergroup:rw-r--r--</permission><blocks><block><id>1073741826</id><genstamp>1002</genstamp><numBytes>6488666</numBytes></block>
 </blocks>
 </inode>
+<inode><id>16389</id><type>FILE</type><name>goodbooks-10k.zip</name><replication>3</replication><mtime>1525151813040</mtime><atime>1525151812501</atime><perferredBlockSize>134217728</perferredBlockSize><permission>ubuntu:supergroup:rw-r--r--</permission><blocks><block><id>1073741827</id><genstamp>1003</genstamp><numBytes>12136324</numBytes></block>
+</blocks>
+</inode>
+<inode><id>16390</id><type>DIRECTORY</type><name>goodbooks</name><mtime>1525151966983</mtime><permission>ubuntu:supergroup:rwxr-xr-x</permission><nsquota>-1</nsquota><dsquota>-1</dsquota></inode>
+<inode><id>16391</id><type>FILE</type><name>ratings.csv</name><replication>3</replication><mtime>1525151879402</mtime><atime>1525151878956</atime><perferredBlockSize>134217728</perferredBlockSize><permission>ubuntu:supergroup:rw-r--r--</permission><blocks><block><id>1073741828</id><genstamp>1004</genstamp><numBytes>12437766</numBytes></block>
+</blocks>
+</inode>
+<inode><id>16392</id><type>FILE</type><name>books.csv</name><replication>3</replication><mtime>1525151943037</mtime><atime>1525151942692</atime><perferredBlockSize>134217728</perferredBlockSize><permission>ubuntu:supergroup:rw-r--r--</permission><blocks><block><id>1073741829</id><genstamp>1005</genstamp><numBytes>3296741</numBytes></block>
+</blocks>
+</inode>
+<inode><id>16393</id><type>FILE</type><name>book_tags.csv</name><replication>3</replication><mtime>1525151966977</mtime><atime>1525151966464</atime><perferredBlockSize>134217728</perferredBlockSize><permission>ubuntu:supergroup:rw-r--r--</permission><blocks><block><id>1073741830</id><genstamp>1006</genstamp><numBytes>16665883</numBytes></block>
+</blocks>
+</inode>
 </INodeSection>
 <INodeReferenceSection></INodeReferenceSection><SnapshotSection><snapshotCounter>0</snapshotCounter></SnapshotSection>
-<INodeDirectorySection><directory><parent>16385</parent><inode>16388</inode><inode>16387</inode></directory>
+<INodeDirectorySection><directory><parent>16385</parent><inode>16388</inode><inode>16387</inode><inode>16390</inode><inode>16389</inode></directory>
 <directory><parent>16387</parent><inode>16386</inode></directory>
+<directory><parent>16390</parent><inode>16393</inode><inode>16392</inode><inode>16391</inode></directory>
 </INodeDirectorySection>
 <FileUnderConstructionSection></FileUnderConstructionSection>
 <SecretManagerSection><currentId>0</currentId><tokenSequenceNumber>0</tokenSequenceNumber></SecretManagerSection><CacheManagerSection><nextDirectiveId>1</nextDirectiveId></CacheManagerSection>
